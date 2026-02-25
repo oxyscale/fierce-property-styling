@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oxyscale AI - Property Styling Automation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--primary:#43302E;
+--bg:#FFF1B5;
+--card:#C1DBE8;
+--surface:rgba(255,241,181,0.92);
+--border:rgba(67,48,46,0.12);
+--accent-border:rgba(67,48,46,0.28);
+--glow:rgba(67,48,46,0.16);
+--text:#43302E;
+--text-dim:rgba(67,48,46,0.70);
+--text-muted:rgba(67,48,46,0.55);
+}
+html{scroll-behavior:smooth}
+body{
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--text);
+line-height:1.6;
+min-height:100vh;
+position:relative;
+overflow-x:hidden;
+}
+body::before{
+content:'';
+position:fixed;
+inset:0;
+background-image:
+  linear-gradient(rgba(67,48,46,0.06) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(67,48,46,0.06) 1px,transparent 1px);
+background-size:80px 80px;
+pointer-events:none;
+z-index:0;
+}
+body::after{
+content:'';
+position:fixed;
+top:-200px;left:50%;
+transform:translateX(-50%);
+width:900px;height:900px;
+background:radial-gradient(circle,rgba(67,48,46,0.12) 0%,transparent 70%);
+pointer-events:none;
+z-index:0;
+}
+.wrapper{
+position:relative;
+z-index:1;
+max-width:880px;
+margin:0 auto;
+padding:48px 24px 64px;
+}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:56px}
+.brand{
+font-size:11px;
+font-weight:700;
+letter-spacing:4px;
+text-transform:uppercase;
+color:var(--text-dim);
+margin-bottom:16px;
+}
+.header h1{
+font-size:clamp(28px,5vw,42px);
+font-weight:800;
+line-height:1.15;
+margin-bottom:12px;
+}
+.header h1 .accent{color:var(--primary)}
+.header .subtitle{
+font-size:15px;
+color:var(--text-dim);
+max-width:600px;
+margin:0 auto 32px;
+font-weight:400;
+}
+
+/* LEGEND */
+.legend{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:16px;
+}
+.legend-item{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:12px;
+font-weight:500;
+color:var(--text-dim);
+}
+.legend-icon{
+width:24px;height:24px;
+border-radius:6px;
+display:flex;align-items:center;justify-content:center;
+font-size:13px;
+background:var(--card);
+border:1px solid var(--border);
+color:var(--primary);
+}
+.legend-icon.ai-icon{
+background:linear-gradient(135deg,rgba(67,48,46,0.13),rgba(67,48,46,0.06));
+border-color:var(--accent-border);
+box-shadow:0 0 8px var(--glow);
+}
+
+/* PROBLEM STATEMENT */
+.problem-section{
+margin-bottom:48px;
+margin-top:8px;
+background:var(--surface);
+border:2px solid var(--accent-border);
+border-radius:14px;
+padding:32px 28px;
+position:relative;
+overflow:hidden;
+}
+.problem-section::before{
+content:'';
+position:absolute;
+top:-60px;left:50%;
+transform:translateX(-50%);
+width:500px;height:500px;
+background:radial-gradient(circle,rgba(67,48,46,0.06) 0%,transparent 70%);
+pointer-events:none;
+}
+.problem-label{
+font-size:10px;
+font-weight:700;
+letter-spacing:2.5px;
+text-transform:uppercase;
+color:var(--primary);
+margin-bottom:6px;
+position:relative;
+}
+.problem-title{
+font-size:20px;
+font-weight:700;
+color:var(--primary);
+margin-bottom:14px;
+position:relative;
+}
+.problem-body{
+font-size:14px;
+color:var(--text-dim);
+line-height:1.75;
+position:relative;
+}
+.phase{margin-bottom:8px}
+.phase-header{
+display:flex;
+align-items:center;
+gap:14px;
+margin-bottom:20px;
+}
+.phase-icon-box{
+width:48px;height:48px;
+border-radius:12px;
+display:flex;align-items:center;justify-content:center;
+font-size:22px;
+background:linear-gradient(135deg,rgba(67,48,46,0.13),rgba(67,48,46,0.06));
+border:1px solid var(--accent-border);
+box-shadow:0 0 12px var(--glow);
+color:var(--primary);
+flex-shrink:0;
+}
+.phase-label{
+font-size:10px;
+font-weight:700;
+letter-spacing:2.5px;
+text-transform:uppercase;
+color:var(--text-muted);
+margin-bottom:2px;
+}
+.phase-name{
+font-size:20px;
+font-weight:700;
+color:var(--primary);
+}
+
+/* NODE CARDS */
+.nodes{
+padding-left:23px;
+border-left:1px solid var(--border);
+margin-left:23px;
+display:flex;
+flex-direction:column;
+gap:12px;
+padding-bottom:4px;
+}
+.node-card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:10px;
+cursor:pointer;
+transition:box-shadow 0.2s,border-color 0.2s;
+overflow:hidden;
+}
+.node-card:hover{
+border-color:var(--accent-border);
+box-shadow:0 2px 12px rgba(67,48,46,0.08);
+}
+.node-card.ai-card{
+background:linear-gradient(135deg,rgba(67,48,46,0.10),rgba(67,48,46,0.04));
+border-color:var(--accent-border);
+box-shadow:0 0 16px var(--glow);
+}
+.node-card.ai-card:hover{
+box-shadow:0 0 24px var(--glow);
+}
+.node-top{
+display:flex;
+align-items:center;
+gap:10px;
+padding:14px 16px;
+}
+.node-type-icon{
+width:28px;height:28px;
+border-radius:7px;
+display:flex;align-items:center;justify-content:center;
+font-size:14px;
+background:rgba(67,48,46,0.06);
+border:1px solid var(--border);
+color:var(--primary);
+flex-shrink:0;
+}
+.ai-card .node-type-icon{
+background:linear-gradient(135deg,rgba(67,48,46,0.16),rgba(67,48,46,0.08));
+border-color:var(--accent-border);
+box-shadow:0 0 8px var(--glow);
+}
+.node-label{
+font-size:14px;
+font-weight:600;
+color:var(--primary);
+flex:1;
+}
+.ai-badge{
+font-size:10px;
+font-weight:700;
+text-transform:uppercase;
+color:var(--primary);
+background:rgba(67,48,46,0.10);
+border:1px solid var(--accent-border);
+border-radius:4px;
+padding:2px 8px;
+letter-spacing:0.5px;
+flex-shrink:0;
+}
+.node-arrow{
+font-size:12px;
+color:var(--text-muted);
+transition:transform 0.25s;
+flex-shrink:0;
+}
+.node-card.open .node-arrow{transform:rotate(90deg)}
+.node-detail{
+padding:0 16px;
+font-size:13px;
+color:var(--text-dim);
+margin-top:-6px;
+margin-bottom:8px;
+padding-left:54px;
+}
+.node-sub{
+display:none;
+padding:10px 16px 14px 54px;
+border-top:1px solid var(--border);
+}
+.node-card.open .node-sub{display:block}
+.node-sub ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.node-sub ul li{
+font-size:13px;
+color:var(--text-dim);
+padding-left:14px;
+position:relative;
+}
+.node-sub ul li::before{
+content:'';
+position:absolute;
+left:0;top:8px;
+width:5px;height:5px;
+border-radius:50%;
+background:var(--text-muted);
+}
+.ai-card .node-sub ul li::before{
+background:var(--primary);
+}
+/* internal note styling */
+.node-sub ul li.internal-note{
+font-style:italic;
+color:var(--primary);
+font-weight:500;
+}
+
+/* PHASE CONNECTOR */
+.phase-connector{
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:8px 0;
+margin-left:23px;
+}
+.phase-connector-line{
+width:1px;
+height:32px;
+background:linear-gradient(to bottom,var(--card),var(--primary));
+}
+.phase-connector-dot{
+width:7px;height:7px;
+border-radius:50%;
+background:var(--primary);
+margin-top:-1px;
+}
+
+/* DESIGN PRINCIPLES */
+.principles-section{
+margin-top:56px;
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:14px;
+padding:32px 28px;
+}
+.principles-label{
+font-size:10px;
+font-weight:700;
+letter-spacing:2.5px;
+text-transform:uppercase;
+color:var(--text-muted);
+margin-bottom:4px;
+}
+.principles-title{
+font-size:20px;
+font-weight:700;
+color:var(--primary);
+margin-bottom:20px;
+}
+.principles-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:14px;
+}
+.principle-card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:8px;
+padding:18px 16px;
+}
+.principle-card h4{
+font-size:14px;
+font-weight:700;
+color:var(--primary);
+margin-bottom:6px;
+}
+.principle-card p{
+font-size:13px;
+color:var(--text-dim);
+line-height:1.5;
+}
+
+/* FOOTER */
+.footer{
+text-align:center;
+margin-top:48px;
+font-size:12px;
+color:var(--text-muted);
+font-weight:500;
+letter-spacing:0.5px;
+}
+
+@media(max-width:600px){
+.wrapper{padding:32px 12px 48px}
+.phase-header{gap:10px}
+.phase-icon-box{width:40px;height:40px;font-size:18px;border-radius:10px}
+.phase-name{font-size:17px}
+.nodes{margin-left:19px;padding-left:19px}
+.node-detail,.node-sub{padding-left:44px}
+.legend{gap:10px}
+.principles-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<header class="header">
+<div class="brand">Oxyscale AI</div>
+<h1>Property Styling <span class="accent">Automation</span></h1>
+<p class="subtitle">End-to-end workflow automation for Aggie's property styling business, from lead capture and quoting through to job completion and client follow-up.</p>
+<div class="legend" id="legend"></div>
+</header>
+<section class="problem-section">
+<div class="problem-label">The Problem We Are Solving</div>
+<div class="problem-title">Too Much Admin, Not Enough Time for the Work That Matters</div>
+<div class="problem-body">Right now, every job runs on memory, emails, and a dated supplier spreadsheet. You visit the property, work out what is needed, then manually price the job using Pabs' hire list, calculate your own markup separately, and put together a quote by hand. Client details live in emails. Invoices are built from a Canva template one at a time. There is no single place to see which jobs are quoted, which are paid, and which are coming up. Follow-ups, reminders, and collection dates all depend on you remembering to do them. When you are physically moving furniture, making beds, and styling three properties a week, that admin piles up fast. This system removes the repetitive work entirely. You fill in one form on your phone at the property, and everything else, the quote, the hire agreement, the invoice, the scheduling, the client communication, and the follow-up, happens automatically. Less time at your desk at 3am, more capacity to take on the work you actually enjoy.</div>
+</section>
+<main id="flow"></main>
+<section class="principles-section" id="principles"></section>
+<footer class="footer">Oxyscale AI &#183; Work Smarter, Not Harder</footer>
+</div>
+<script>
+const ICONS={process:'\u2699',automation:'\u26A1',decision:'\u25C6',trigger:'\u25B6',ai:'\u2726',future:'\u25CE'};
+const LABELS={process:'Process',automation:'Automation',decision:'Decision',trigger:'Trigger',ai:'AI Powered',future:'Future'};
+
+const phases=[
+{
+  name:'Lead Capture',
+  label:'PHASE 1',
+  icon:'\u2295',
+  nodes:[
+    {type:'trigger',label:'New Styling Enquiry Received',detail:'A new lead comes in from a potential client or their real estate agent.',subs:['Enquiry arrives via phone, email, or agent referral','The referring agent or you fill in the online lead form below to register the new lead','Once the form is submitted, a CRM record is automatically created for this client']},
+    {type:'process',label:'Client Information Form',detail:'Capture all essential client and property details upfront in a single form entry.',subs:['Client name, email, phone number','Property address']},
+    {type:'process',label:'Property and Package Selection',detail:'Select the styling package and property configuration. All pricing data (Pabs hire rates and your own stock) is pre-loaded so the quote total is calculated automatically. You still fill in the Pabs order form yourself using your quote as a reference.',subs:['Number of bedrooms, bathrooms, living zones, study','Additional items such as stairs, rugs, cushions, lamps','Styling package tier selected from pre-built options','Note for George: Pabs hire rates and Aggie\'s own stock (lamps, art, plants etc.) run on two separate pricing schedules. Both are loaded into the backend for quote calculation only. The system does not send anything to Pabs — Aggie fills in their order form manually and uses the CRM quote as her cross-reference.']}
+  ]
+},
+{
+  name:'Quote Generation',
+  label:'PHASE 2',
+  icon:'\u27D0',
+  nodes:[
+    {type:'ai',label:'Auto-Price Calculation',detail:'The pricing engine uses pre-loaded Pabs rates and your own stock costs to calculate the client quote automatically. This is for quoting only — it does not generate a Pabs order or send anything to the supplier.',subs:['Pabs hire pricing data pre-loaded in the backend data store','Trade markup applied automatically to all hire items (selectable per job, e.g. 30%, 40%, 50%)','Your own accessory and stock costs factored into the final price','The CRM stores exactly what you selected so you can cross-reference it when you fill in the Pabs order form yourself']},
+    {type:'automation',label:'Branded Quote and Hire Agreement Sent',detail:'A professional quote and hire agreement are generated and emailed to the client the moment the form is submitted.',subs:['Branded PDF quote generated with fully itemised pricing (your Canva template if preferred)','Hire agreement with your terms and conditions attached','Email sent to client automatically, containing a DocuSign link to review and accept']}
+  ]
+},
+{
+  name:'Client Acceptance',
+  label:'PHASE 3',
+  icon:'\u27E1',
+  nodes:[
+    {type:'process',label:'Client Reviews Quote and Terms',detail:'The client receives the quote via email and reviews terms and conditions before signing.',subs:['Quote and hire agreement accessible via a single email link','Terms and conditions displayed in full before signature','Client selects their preferred payment method: pay now, pay later (Campaign Flow), or pay cash','Once signed, the CRM updates automatically with the client\'s payment choice and a copy of the accepted quote is stored on file']},
+    {type:'decision',label:'Quote Accepted or Declined',detail:'The workflow branches based on how the client responds to the quote.',subs:['If accepted, the job moves into the invoicing stage of the CRM','If declined, the record is updated and an automatic follow-up email can be scheduled','If untouched for a set period (e.g. 3 days), an automatic follow-up is triggered on your behalf','CRM status updates in real time based on the client\'s action']}
+  ]
+},
+{
+  name:'Invoicing and Payment',
+  label:'PHASE 4',
+  icon:'\u21D7',
+  nodes:[
+    {type:'automation',label:'Xero Auto-Invoice Generated',detail:'An invoice is created in Xero automatically using the client and job data already captured from the original lead form - no re-entering details.',subs:['Client name, address, email, and job total all pulled from the initial form entry','Invoice generated and sent without any manual data entry']},
+    {type:'process',label:'Payment Method Routing',detail:'The system routes the job based on whichever payment method the client selected at acceptance.',subs:['If client chose Pay Now - Xero sends the invoice directly','If client chose Pay Cash - the CRM is updated and no invoice is sent','If client chose Pay Later - you receive an automatic email prompting you to prepare Campaign Flow for the property (this can be further automated if needed)']},
+    {type:'automation',label:'Payment Tracking in CRM',detail:'Xero syncs payment status back to the CRM so you always know at a glance what has been paid and what is still outstanding.',subs:['Paid invoices auto-tick the payment field in Monday.com','Unpaid invoices remain visible for easy follow-up','No manual reconciliation required']}
+  ]
+},
+{
+  name:'Job Scheduling',
+  label:'PHASE 5',
+  icon:'\u2B21',
+  nodes:[
+    {type:'automation',label:'Scheduling Notification Sent',detail:'Once payment is confirmed, you receive an email with a short form to lock in the install date and confirm access details. This information flows straight back into the CRM.',subs:['Email notifies you that the property is ready for staging','You enter the install date and access details via the linked form','The Monday CRM updates automatically with the scheduled date and notes']},
+    {type:'automation',label:'Client Booking Confirmation',detail:'The client receives an automatic email confirming their scheduled install date and what to expect.',subs:['Confirmation includes the install date and property address','Professionally branded communication, sent without any manual work','Client knows exactly when to expect the styling team']},
+    {type:'automation',label:'Job Item List in CRM',detail:'The CRM stores the full list of items you selected for the job so you can cross-reference it when filling in the Pabs order form and coordinating your removalist.',subs:['Every item selected during quoting is saved against the job in Monday.com','Use this as your reference when filling in the Pabs spreadsheet and briefing your removalist','Property address, install date, and access instructions all in one place']},
+    {type:'automation',label:'Collection Reminder Email',detail:'At week five of a six-week hire period, you receive an automatic reminder that the job is coming to a close.',subs:['Reminder sent to you so you can plan furniture collection','Gives you advance notice to coordinate pickup with Pabs','Keeps you on top of timelines without having to track dates manually']}
+  ]
+},
+{
+  name:'Post-Job Follow-up',
+  label:'PHASE 6',
+  icon:'\u27F3',
+  nodes:[
+    {type:'trigger',label:'Property Marked as Sold',detail:'When the property sells, you mark it as sold in the CRM. This single action triggers the entire post-job follow-up sequence below.',subs:['One-click status change in the Monday CRM','All downstream emails fire automatically from this trigger','No separate tasks to remember or schedule']},
+    {type:'automation',label:'Congratulations Email with Review Request and Services',detail:'The client receives a single email congratulating them on the sale, thanking them for choosing your service, requesting a Google review, and showcasing your other offerings.',subs:['Congratulates the client on the successful sale of their property','Includes a direct link to leave a Google review for your business','Promotes your other services: interior design consults, plant styling, vintage sourcing, and showroom','Encourages referrals and positions you for future work, all in one polished email']}
+  ]
+},
+{
+  name:'CRM and Job Management',
+  label:'PHASE 7',
+  icon:'\u229E',
+  nodes:[
+    {type:'process',label:'Centralised Job Board',detail:'All jobs, quotes, invoices, and client details live in one place on Monday.com.',subs:['No more searching through emails or spreadsheets','Every job visible with status, dates, and documents','Floor plans, quotes, and signed agreements all attached']},
+    {type:'process',label:'Job Status Workflow',detail:'Jobs flow through clear stages so you always know what needs attention.',subs:['Stages: Quoted, Accepted, Scheduled, Installed, Complete','Drag and drop or auto-progress based on triggers','At a glance view of all active and upcoming jobs']}
+  ]
+},
+{
+  name:'Future Add-Ons',
+  label:'FUTURE ADD-ONS',
+  icon:'\u25CE',
+  nodes:[
+    {type:'future',label:'AI Property Scanner',detail:'Automatically detect when a styled property is marked as sold on realestate.com.au.',subs:['Scans listing status changes in real time','Notifies you that the property has sold so you can arrange collection','Triggers congratulations email to client with upsell offer']},
+    {type:'future',label:'Calendar Integration',detail:'Install dates and key milestones sync directly to your Google Calendar.',subs:['Events created automatically when install date is set','Includes property address and access notes','Push notifications so nothing is missed on the go']},
+    {type:'future',label:'Business Intelligence Dashboard',detail:'Visual dashboard showing revenue, profit, lead conversion, and top referring agents.',subs:['Track leads quoted versus leads converted','Identify which agents refer the most work','Monitor revenue and job volume month by month']}
+  ]
+}
+];
+
+const principles=[
+{title:'Minimal Input, Maximum Output',desc:'You enter client details once at the start. Every downstream action, from quoting to invoicing to scheduling, pulls from that single data entry.'},
+{title:'Phone-First Workflow',desc:'Every step is designed to work from your phone while you are on site. No desktop required, no clunky spreadsheets, just tap and go.'},
+{title:'Scalable Without Stress',desc:'Handle more jobs per week without the administrative headaches. The system grows with your business so you can focus on the creative work.'}
+];
+
+// RENDER LEGEND
+(function(){
+const el=document.getElementById('legend');
+const types=['process','automation','decision','trigger','ai','future'];
+el.innerHTML=types.map(t=>`<div class="legend-item"><div class="legend-icon${t==='ai'?' ai-icon':''}">${ICONS[t]}</div>${LABELS[t]}</div>`).join('');
+})();
+
+// RENDER FLOW
+(function(){
+const el=document.getElementById('flow');
+let html='';
+phases.forEach((phase,pi)=>{
+  html+=`<div class="phase">`;
+  html+=`<div class="phase-header"><div class="phase-icon-box">${phase.icon}</div><div><div class="phase-label">${phase.label}</div><div class="phase-name">${phase.name}</div></div></div>`;
+  html+=`<div class="nodes">`;
+  phase.nodes.forEach((node,ni)=>{
+    const isAI=node.type==='ai';
+    const cardCls=isAI?'node-card ai-card':'node-card';
+    const id=`n${pi}-${ni}`;
+    html+=`<div class="${cardCls}" id="${id}" onclick="toggleNode('${id}')">`;
+    html+=`<div class="node-top"><div class="node-type-icon">${ICONS[node.type]}</div><span class="node-label">${node.label}</span>`;
+    if(isAI) html+=`<span class="ai-badge">\u2726 AI</span>`;
+    html+=`<span class="node-arrow">&#9654;</span></div>`;
+    if(node.detail) html+=`<div class="node-detail">${node.detail}</div>`;
+    if(node.subs&&node.subs.length){
+      html+=`<div class="node-sub"><ul>${node.subs.map(s=>{
+        const isNote=s.startsWith('Note for George:');
+        return `<li${isNote?' class="internal-note"':''}>${s}</li>`;
+      }).join('')}</ul></div>`;
+    }
+    html+=`</div>`;
+  });
+  html+=`</div></div>`;
+  if(pi<phases.length-1){
+    html+=`<div class="phase-connector"><div class="phase-connector-line"></div><div class="phase-connector-dot"></div></div>`;
+  }
+});
+el.innerHTML=html;
+})();
+
+// RENDER PRINCIPLES
+(function(){
+const el=document.getElementById('principles');
+el.innerHTML=`<div class="principles-label">Design Principles</div><div class="principles-title">How We Built This</div><div class="principles-grid">${principles.map(p=>`<div class="principle-card"><h4>${p.title}</h4><p>${p.desc}</p></div>`).join('')}</div>`;
+})();
+
+function toggleNode(id){
+document.getElementById(id).classList.toggle('open');
+}
+</script>
+</body>
+</html>
